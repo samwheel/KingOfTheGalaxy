@@ -2,6 +2,7 @@ from src.empire import Empire
 from random import choice
 from src.planet import Planet
 from src.planet import Focus
+from race import Race
 
 def random_planet_name() -> str:
     name_list:list[str] = []
@@ -14,7 +15,8 @@ def main() -> None:
     empire_name:str = input("What would you like to call your empire?: ")
     emperor_name:str = input("What is your emperor's name?:")
     player_empire:Empire = Empire(empire_name, emperor_name)
-    current_planet:Planet = Planet("Sol I")
+    starting_race:Race = Race("Human", 1.00)
+    current_planet:Planet = Planet("Sol I", starting_race)
 
     while True:
         command: list[str] = input("Enter a command: ").lower().strip().split()
@@ -26,6 +28,9 @@ def main() -> None:
 
             case ["view", "planet"]:
                 print(f"{current_planet.name} focused on {current_planet.focus}")
+
+            case ["planet", "race"]:
+                print(current_planet.race)
 
             case ["change", "planet", "focus", "to", focus]:
                 current_planet.focus = Focus(focus)
