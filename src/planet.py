@@ -1,5 +1,5 @@
 from enum import StrEnum
-from race import Race
+from src.race import Race
 
 class Focus(StrEnum):
     PRODUCTION = "production"
@@ -9,10 +9,14 @@ class Focus(StrEnum):
     INFLUENCE = "influence"
 
 class Planet:
-    def __init__(self, name:str, race:Race, focus:Focus = Focus.PRODUCTION) -> None:
+    def __init__(self, name:str, race:Race, population: int, focus:Focus = Focus.PRODUCTION) -> None:
         self.name: str = name
         self.race: Race = race
         self.focus: Focus = focus
+        self.population:int = population
+    
+    def __str__(self) -> str:
+        return f"Planet {self.name} focused on {self.focus}"
     
     def __repr__(self) -> str:
-        return f"Planet('{self.name}', {self.focus})"
+        return f"Planet('{self.name}', {repr(self.race)}, {self.population}, {self.focus})"

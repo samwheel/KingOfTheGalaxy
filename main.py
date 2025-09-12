@@ -2,21 +2,43 @@ from src.empire import Empire
 from random import choice
 from src.planet import Planet
 from src.planet import Focus
-from race import Race
+from src.race import Race, Metabolism
+
+def get_races() -> dict[str, Race]:
+    races: dict[str, Race] = {}
+
+    with open("src/races.dat") as race_file:
+        for line in race_file:
+            new_race: Race = eval(line)
+            races[new_race.name.lower()] = new_race
+
+    return races
 
 def random_planet_name() -> str:
     name_list:list[str] = []
-    with open("names.txt", "r") as names:
-        name_list = names.readlines()
-        return choice(name_list)
+    with open("src/names.txt", "r") as names:
+        name_list = [name.strip() for name in names.readlines()]
+        return choice(name_list) + "" * choice(range(1, 5))
 
 def main() -> None:
     print("Welcome to KingOfTheGalaxy!")
     empire_name:str = input("What would you like to call your empire?: ")
-    emperor_name:str = input("What is your emperor's name?:")
+    emperor_name:str = input("What is your emperor's name?: ")
     player_empire:Empire = Empire(empire_name, emperor_name)
-    starting_race:Race = Race("Human", 1.00)
-    current_planet:Planet = Planet("Sol I", starting_race)
+
+    race_list: dict[str, Race] = get_races()
+    print("Race options:")
+    for key in race_list:
+        print(f"    {key}")
+    starting_race:Race|None = None
+    while starting_race == None:
+        race_choice: str = input("Race?: ").lower().strip()
+        try:
+            starting_race = race_list[race_choice]
+        except KeyError:
+            print(f"Race option {race_choice} does not exist. Would you like to try again?")
+
+    current_planet:Planet = Planet(random_planet_name(), starting_race, 1)
 
     while True:
         command: list[str] = input("Enter a command: ").lower().strip().split()
