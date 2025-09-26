@@ -18,7 +18,7 @@ def random_planet_name() -> str:
     name_list:list[str] = []
     with open("src/names.txt", "r") as names:
         name_list = [name.strip() for name in names.readlines()]
-        return choice(name_list) + "" * choice(range(1, 5))
+        return choice(name_list) + " " + "I" * choice(range(1, 3))
 
 def main() -> None:
     print("Welcome to KingOfTheGalaxy!")
@@ -39,6 +39,8 @@ def main() -> None:
             print(f"Race option {race_choice} does not exist. Would you like to try again?")
 
     current_planet:Planet = Planet(random_planet_name(), starting_race, 1)
+    player_empire.planets.append(current_planet)
+    player_empire.year_handler.add_observer(current_planet)
 
     while True:
         command: list[str] = input("Enter a command: ").lower().strip().split()
@@ -53,6 +55,12 @@ def main() -> None:
 
             case ["planet", "race"]:
                 print(current_planet.race)
+            
+            case ["planet", "population"]:
+                print(current_planet.population)
+            
+            case ["planet", "industry"]:
+                print(current_planet.industry)
 
             case ["change", "planet", "focus", "to", focus]:
                 current_planet.focus = Focus(focus)
@@ -60,6 +68,17 @@ def main() -> None:
 
             case ["empire"]:
                 print(player_empire)
+            
+            case ["empire", "industry"]:
+                print(player_empire.industry)
+            
+            case ["current", "year"]:
+                print(player_empire.year_handler.year)
+
+            case ["next", "year"]:
+                print("Advancing year:")
+                player_empire.year_handler.next_year()
+                print(f"Current year: {player_empire.year_handler.year}")
 
             case _:
                 print("I don't understand that command.")

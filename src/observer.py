@@ -1,5 +1,5 @@
 class Observer:
-    def update(self):
+    def update(self) -> None:
         raise NotImplementedError("Subclasses must override this method")
 
 class Subject:
