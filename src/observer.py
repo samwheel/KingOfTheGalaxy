@@ -1,5 +1,5 @@
 class Observer:
-    def update(self) -> None:
+    def observer_update(self) -> None:
         raise NotImplementedError("Subclasses must override this method")
 
 class Subject:
@@ -12,6 +12,9 @@ class Subject:
     def remove_observer(self, observer:Observer) -> None:
         self.__observer_list.remove(observer)
     
+    def set_observers(self, observers: list[Observer]) -> None:
+        self.__observer_list = observers
+    
     def update_observers(self) -> None:
         for observer in self.__observer_list:
-            observer.update()
+            observer.observer_update()

@@ -38,7 +38,7 @@ def main() -> None:
         except KeyError:
             print(f"Race option {race_choice} does not exist. Would you like to try again?")
 
-    current_planet:Planet = Planet(random_planet_name(), starting_race, 1)
+    current_planet:Planet = Planet(random_planet_name(), starting_race, 1, 10)
     player_empire.planets.append(current_planet)
     player_empire.year_handler.add_observer(current_planet)
 

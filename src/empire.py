@@ -17,4 +17,8 @@ class Empire:
         for planet in self.planets:
             industry += planet.industry
         
-        return industry 
+        return industry
+
+    def add_planet(self, planet: Planet) -> None:
+        self.planets.append(planet)
+        self.year_handler.add_observer(planet)

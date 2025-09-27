@@ -60,7 +60,7 @@ class RandomNameGenerator:
 
         return name
     
-    def review_names(self, names: list[str], accepted_names: list[str], unaccepted_names: list[str]) -> list[list[str]]:
+    def review_names(self, names: list[str], accepted_names: list[str], unaccepted_names: list[str], like_threshold:int = 10) -> list[list[str]]:
         names_to_accept: list[str] = []
         names_to_like: list[str] = []
         self.__patterns = {}
@@ -83,9 +83,9 @@ class RandomNameGenerator:
                             pass
         
         self.__patterns[""] = 0
-
-        # for pattern, strength in self.__patterns.items():
-        #     print(f"{pattern}, {strength}")
+        with open("like_prob.dat", "w") as file:
+            for pattern, strength in sorted(self.__patterns.items(), key=lambda item: item[1], reverse=True):
+                file.write(f"{pattern}, {strength}\n")
 
         for name in names:
             liked_probability = 0
@@ -98,7 +98,7 @@ class RandomNameGenerator:
                 print(f"Accepting: {name}")
                 print(f"{name}'s liked probability: {liked_probability}")
                 
-                if liked_probability > 9:
+                if liked_probability > like_threshold - 1:
                     print(f"Liking: {name}")
                     names_to_like.append(name)
                 else:
@@ -114,6 +114,8 @@ if unaccept_names[0] != "n":
         with open("unaccepted_names.txt", "a") as unaccepted_names:
             unaccepted_names.writelines(reviewed_names.readlines())
 
+like_threshold = int(input("What liked threshold do you want?: "))
+
 name_string:str = ""
 with open("names.txt") as name_file:
     for line in name_file:
@@ -122,7 +124,7 @@ with open("names.txt") as name_file:
 generator.generate_probabilities(name_string)
 
 with open("generated_names.txt", "w") as name_file:
-    for _ in range(10000):
+    for _ in range(1000):
         random_name: str = generator.random_name()
         name_file.write(random_name + "\n")
 
@@ -135,7 +137,8 @@ with open("generated_names.txt", "r") as name_file:
             reviewed_name_list, liked_name_list = generator.review_names(
                 [name.strip().lower() for name in name_file.readlines()], 
                 [name.strip().lower() for name in accepted_name_file.readlines()], 
-                [name.strip().lower() for name in unaccepted_name_file.readlines()]
+                [name.strip().lower() for name in unaccepted_name_file.readlines()],
+                like_threshold
             )
 
 

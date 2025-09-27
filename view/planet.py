@@ -3,11 +3,14 @@ from pygame import draw
 from pygame import sprite
 from pygame import Color
 import pygame
+import math
 
 from src.planet import Planet, Focus
+from src.observer import Observer
+
 from pygame_helper import basic_sprite, button
 
-class PlanetView(sprite.Sprite):
+class PlanetView(sprite.Sprite, Observer):
     def __init__(self, radius: int, color: Color, planet: Planet, padding: int = 10) -> None:
         super().__init__()
         self.image = None
@@ -22,19 +25,21 @@ class PlanetView(sprite.Sprite):
         # Add planet name
         font = pygame.font.Font(None, 36)
         text_surface = font.render(planet.name, True, Color("white"))
-        text_sprite = basic_sprite.BasicSprite(text_surface, radius * 2 + padding, radius - text_surface.get_height() // 2)
+        text_sprite = basic_sprite.BasicSprite(text_surface, radius * 2 + padding * 2, radius - text_surface.get_height() // 2)
         self.__sprites.add(text_sprite)
 
         # Add focus button
-        focus_button = button.Button(Color("black"), planet.focus, radius * 2 + padding, radius + padding, action=lambda: self.change_focus())
+        focus_button = button.Button(Color("black"), planet.focus, radius * 2 + padding, radius + padding, action=lambda: self.change_focus(), update_function=lambda: setattr(focus_button, "text", planet.focus))
         self.__sprites.add(focus_button)
         self.planet = planet
+
+        # Planet population
+        population_text = button.Button(Color("black"), f"Pop {planet.population}", padding, radius * 2 + padding, update_function=lambda: setattr(population_text, "text", f"Pop {math.floor(planet.population * 10 + 0.5) / 10}"))
+        self.__sprites.add(population_text)
 
     def change_focus(self, focus: Focus | None = None) -> None:
         focus_order = [Focus.INDUSTRY, Focus.RESEARCH, Focus.INFLUENCE, Focus.GROWTH, Focus.DEFENSE]
         self.planet.focus = focus if focus else focus_order[(focus_order.index(self.planet.focus) + 1) % len(focus_order)]
-        for sprite in self.__sprites.sprites():
-            sprite.__setattr__("text", self.planet.focus) if isinstance(sprite, button.Button) else None
 
     def move(self, x: int, index: int = 0) -> None:
         for sprite in self.__sprites.sprites():
@@ -43,6 +48,11 @@ class PlanetView(sprite.Sprite):
     def update(self, event) -> None:
         for sprite in self.__sprites.sprites():
             sprite.update(event)
+    
+    def observer_update(self) -> None:
+        for sprite in self.__sprites:
+            if isinstance(sprite, Observer):
+                sprite.observer_update()
 
     def draw(self, surface) -> None:
         for sprite in self.__sprites.sprites():

@@ -1,5 +1,4 @@
 from enum import StrEnum
-from typing import Literal
 from src.race import Race
 from src.observer import Observer
 
@@ -11,11 +10,12 @@ class Focus(StrEnum):
     INFLUENCE = "Influence"
 
 class Planet(Observer):
-    def __init__(self, name:str, race:Race, population: float, focus:Focus = Focus.INDUSTRY) -> None:
+    def __init__(self, name:str, race:Race, population: float, max_population: int, focus:Focus = Focus.INDUSTRY) -> None:
         self.name: str = name
         self.race: Race = race
         self.focus: Focus = focus
         self.population: float = population
+        self.max_population: int = max_population
     
     def __str__(self) -> str:
         return f"Planet {self.name} focused on {self.focus}"
@@ -29,5 +29,7 @@ class Planet(Observer):
         industry: float = industry_from_focus
         return industry
     
-    def update(self) -> None:
-        self.population += self.race.population * self.population * .04
+    def observer_update(self) -> None:
+        self.population += self.race.population * self.population * (.04 if self.focus == Focus.GROWTH else .02)
+        if self.population > self.max_population:
+            self.population = self.max_population

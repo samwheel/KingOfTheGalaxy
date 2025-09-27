@@ -2,3 +2,6 @@ __pycache__/
 build/
 dist/
 *.spec
+reviewed_names*
+generated_names*
+like_prob*

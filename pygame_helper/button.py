@@ -1,8 +1,10 @@
 from pygame import font, Color, Surface, sprite
 import pygame
 
-class Button(sprite.Sprite):
-    def __init__(self, color: Color, text: str, x: int, y: int, action = lambda: None) -> None:
+from src.observer import Observer
+
+class Button(sprite.Sprite, Observer):
+    def __init__(self, color: Color, text: str, x: int, y: int, action = lambda: None, update_function = lambda: None) -> None:
         super().__init__()
         self.font = font.Font(None, 36)
         self.color = color
@@ -13,6 +15,7 @@ class Button(sprite.Sprite):
         self.x: int = x
         self.y: int = y
         self.action = action
+        self.update_function = update_function
     
     def move(self, x:int, y:int) -> None:
         self.rect.topleft = (x + self.x + 5, y + self.y + 5)
@@ -21,6 +24,9 @@ class Button(sprite.Sprite):
         if event.type == pygame.MOUSEBUTTONDOWN:
             if self.rect.collidepoint(event.pos):
                 self.action()
+    
+    def observer_update(self) -> None:
+        self.update_function()
     
     def draw(self, surface: Surface) -> None:
         self.surface = self.font.render(self.text, True, self.color)
@@ -31,8 +37,8 @@ class Button(sprite.Sprite):
         self.surface.blit(self.font.render(self.text, True, self.color), (5, 5))
         surface.blit(self.surface, self.rect)
 
-class ImageButton(sprite.Sprite):
-    def __init__(self, color: Color, image: Surface, x: int, y: int, action = lambda: None) -> None:
+class ImageButton(sprite.Sprite, Observer):
+    def __init__(self, color: Color, image: Surface, x: int, y: int, action = lambda: None, update_function = lambda: None) -> None:
         super().__init__()
         self.color: Color = color
         self.surface: Surface = image
@@ -41,6 +47,7 @@ class ImageButton(sprite.Sprite):
         self.x: int = x
         self.y: int = y
         self.action = action
+        self.update_function = update_function
     
     def move(self, x:int, y:int) -> None:
         self.rect.topleft = (x + self.x, y + self.y)
@@ -49,6 +56,9 @@ class ImageButton(sprite.Sprite):
         if event.type == pygame.MOUSEBUTTONDOWN:
             if self.rect.collidepoint(event.pos):
                 self.action()
+    
+    def observer_update(self) -> None:
+        self.update_function()
     
     def draw(self, surface: Surface) -> None:
         background: Surface = Surface(self.rect.inflate(10, 10).size)
