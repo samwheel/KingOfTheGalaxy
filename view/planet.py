@@ -34,14 +34,32 @@ class PlanetView(sprite.Sprite, Observer):
         self.planet = planet
 
         # Planet population
-        population_text = button.Button(Color("black"), f"Pop {planet.population}", padding, radius * 2 + padding, update_function=lambda: setattr(population_text, "text", f"Pop {math.floor(planet.population * 10 + 0.5) / 10}"))
+        population_text = button.Button(Color("black"), f"Pop {planet.population}", padding, radius * 2 + padding * 2, update_function=lambda: setattr(population_text, "text", f"Pop {math.floor(planet.population * 10 + 0.5) / 10}"))
         self.__sprites.add(population_text)
+
+        # Planet Production
+        production_button = button.ImageButton(
+            Color("gray"), 
+            button.create_button_surface(pygame.image.load("images/production_icon.png"), str(math.floor(planet.industry * 10 + 0.5) / 10)), 
+            padding + 120, 
+            radius * 2 + padding * 2, 
+            update_function=lambda: setattr(production_button, "surface", button.create_button_surface(pygame.image.load("images/production_icon.png"), str(math.floor(planet.industry * 10 + 0.5) / 10))))
+        self.__sprites.add(production_button)
+        
+        self.building_sprites: list[sprite.Sprite] = []
 
     def change_focus(self, focus: Focus | None = None) -> None:
         focus_order = [Focus.INDUSTRY, Focus.RESEARCH, Focus.INFLUENCE, Focus.GROWTH, Focus.DEFENSE]
         self.planet.focus = focus if focus else focus_order[(focus_order.index(self.planet.focus) + 1) % len(focus_order)]
 
     def move(self, x: int, index: int = 0) -> None:
+        self.__sprites.remove(self.building_sprites)
+        self.building_sprites = []
+        for building in self.planet.buildings:
+            building_sprite = basic_sprite.BasicSprite(pygame.font.Font(None, 32).render(f"{building}", True, Color("white")), self.planet.buildings.index(building) * 50, 200)
+            self.building_sprites.append(building_sprite)
+        self.__sprites.add(self.building_sprites)
+
         for sprite in self.__sprites.sprites():
             sprite.move(x, 50 + index * 160)
     
@@ -55,5 +73,5 @@ class PlanetView(sprite.Sprite, Observer):
                 sprite.observer_update()
 
     def draw(self, surface) -> None:
-        for sprite in self.__sprites.sprites():
+        for sprite in self.__sprites:
             sprite.draw(surface)

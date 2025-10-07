@@ -1,6 +1,7 @@
 from enum import StrEnum
 from src.race import Race
 from src.observer import Observer
+from src.buildings import Building
 
 class Focus(StrEnum):
     INDUSTRY = "Industry"
@@ -16,6 +17,7 @@ class Planet(Observer):
         self.focus: Focus = focus
         self.population: float = population
         self.max_population: int = max_population
+        self.buildings: list[Building] = []
     
     def __str__(self) -> str:
         return f"Planet {self.name} focused on {self.focus}"
@@ -27,6 +29,8 @@ class Planet(Observer):
     def industry(self) -> float:
         industry_from_focus: float = self.race.industry * self.population if self.focus == Focus.INDUSTRY else 0.0
         industry: float = industry_from_focus
+        for building in self.buildings:
+            industry += building.production_bonus
         return industry
     
     def observer_update(self) -> None:

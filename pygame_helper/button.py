@@ -3,6 +3,14 @@ import pygame
 
 from src.observer import Observer
 
+def create_button_surface(image: Surface, value: str) -> Surface:
+    surface = Surface((100, 35))
+    surface.fill(Color("gray"))
+    surface.blit(image, (5, 5))
+    prod_text = pygame.font.Font(None, 36).render(value, True, Color("black"))
+    surface.blit(prod_text, (40, 5))
+    return surface
+
 class Button(sprite.Sprite, Observer):
     def __init__(self, color: Color, text: str, x: int, y: int, action = lambda: None, update_function = lambda: None) -> None:
         super().__init__()
@@ -61,7 +69,7 @@ class ImageButton(sprite.Sprite, Observer):
         self.update_function()
     
     def draw(self, surface: Surface) -> None:
-        background: Surface = Surface(self.rect.inflate(10, 10).size)
+        background: Surface = Surface(self.rect.size)
         background.fill(self.color)
         surface.blit(background, self.rect)
         surface.blit(self.surface, self.rect)

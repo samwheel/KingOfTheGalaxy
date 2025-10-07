@@ -1,5 +1,6 @@
 from src.year_handler import YearHandler
 from src.planet import Planet
+from src.build_handler import BuildHandler
 
 class Empire:
     def __init__(self, name:str = "", emperor_name:str = "") -> None:
@@ -7,6 +8,8 @@ class Empire:
         self.emperor_name: str = emperor_name
         self.year_handler = YearHandler()
         self.planets: list[Planet] = []
+        self.build_handler: BuildHandler = BuildHandler(self)
+        self.year_handler.add_observer(self.build_handler)
     
     def __str__(self) -> str:
         return f"Empire {self.name}, Emperor {self.emperor_name}"
