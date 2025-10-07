@@ -17,11 +17,11 @@ class ProductionView(pygame.sprite.Sprite, Observer):
         self.image.fill(pygame.Color("lightgray"))
         self.rect: pygame.Rect = self.image.get_rect(topleft=(0, 100))
         self.font = pygame.font.Font(None, 36)
-        self.__current_planet: Planet | None = None
+        self.current_planet: Planet | None = None
         self.building_list_buttons: list[Button] = []
 
     def set_current_planet(self, planet: Planet):
-        self.__current_planet = planet
+        self.current_planet = planet
     
     def update(self, event) -> None:
         for button in self.building_list_buttons:
@@ -40,10 +40,10 @@ class ProductionView(pygame.sprite.Sprite, Observer):
             surface.blit(building_text, (self.rect.x + 10, self.rect.y + 60 + 50 * build_list_text.index(building_text)))
         
         def add_to_list(building_type: type[Building]):
-            self.empire.build_handler.build(building_type(self.__current_planet))
+            self.empire.build_handler.build(building_type(self.current_planet))
 
 
         pygame.draw.rect(surface, pygame.Color("white"), pygame.Rect(self.rect.bottomright[0] + 10, self.rect.bottomright[1] - 100, 500, 100))
-        self.building_list_buttons: list[Button] = [Button(pygame.Color("black"), str(building(self.__current_planet)), self.rect.bottomright[0] + 30, self.rect.bottomright[1] - 80 + 50 * get_buildings_list().index(building), lambda: add_to_list(building)) for building in get_buildings_list()]
+        self.building_list_buttons: list[Button] = [Button(pygame.Color("black"), str(building(self.current_planet)), self.rect.bottomright[0] + 30, self.rect.bottomright[1] - 80 + 50 * get_buildings_list().index(building), lambda: add_to_list(building)) for building in get_buildings_list()]
         for building_button in self.building_list_buttons:
             building_button.draw(surface)

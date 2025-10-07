@@ -7,6 +7,7 @@ import math
 
 from src.planet import Planet, Focus
 from src.observer import Observer
+from src.resource_helper import resourcePath
 
 from pygame_helper import basic_sprite, button
 
@@ -43,7 +44,7 @@ class PlanetView(sprite.Sprite, Observer):
             button.create_button_surface(pygame.image.load("images/production_icon.png"), str(math.floor(planet.industry * 10 + 0.5) / 10)), 
             padding + 120, 
             radius * 2 + padding * 2, 
-            update_function=lambda: setattr(production_button, "surface", button.create_button_surface(pygame.image.load("images/production_icon.png"), str(math.floor(planet.industry * 10 + 0.5) / 10))))
+            update_function=lambda: setattr(production_button, "surface", button.create_button_surface(pygame.image.load(resourcePath("images/production_icon.png")), str(math.floor(planet.industry * 10 + 0.5) / 10))))
         self.__sprites.add(production_button)
         
         self.building_sprites: list[sprite.Sprite] = []
