@@ -1,5 +1,7 @@
 from random import choice
 import os
+
+from src.race import Race
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
 import warnings
 warnings.filterwarnings("ignore", category=UserWarning)
@@ -8,7 +10,7 @@ from pygame.time import Clock
 
 from pygame_helper import button
 
-from view.star import Star
+from view.star import StarView
 from view.planet import PlanetView
 from view.production import ProductionView
 
@@ -17,6 +19,7 @@ from src.race import *
 from src.empire import Empire
 from src.create_races import create_races
 from src.resource_helper import resourcePath
+from src.star import Star
 
 def random_star_name() -> str:
     name_list:list[str] = []
@@ -28,19 +31,15 @@ pygame.init()
 
 screen: pygame.Surface = pygame.display.set_mode((1800,1000))
 pygame.display.set_caption("King of the Galaxy")
-planets: list[PlanetView] = []
 
-races = create_races()
+races: list[Race] = create_races()
 player_empire = Empire("Blorg", "Glorp")
-player_empire.add_planet(Planet(f"{random_star_name()} I", races[0], 3, 20, Focus.INDUSTRY))
+player_empire.add_planet(Planet(f"", races[0], 3, races[0].prefered_planet, Focus.INDUSTRY))
 
 production_view = ProductionView(player_empire)
 
-planets.append(PlanetView(30, pygame.Color(20, 255, 20), player_empire.planets[0]))
-
-stars: list[Star] = []
-stars.append(Star(800, 450, 10, pygame.Color(255, 0, 0), planets))
-stars.append(Star(700, 400, 12, pygame.Color("yellow"), []))
+stars: list[StarView] = []
+stars.append(StarView(Star(random_star_name(), (800, 450), [player_empire.planets[0]]), 10, pygame.Color(255, 0, 0)))
 
 planet_view_group: list[PlanetView] = []
 widgets = pygame.sprite.Group()
@@ -70,7 +69,7 @@ clock = Clock()
 while True:
     for event in pygame.event.get():
         widgets.update(event)
-        for planet in planets:
+        for planet in planet_view_group:
             planet.update(event)
         
         if current_view and show_planet_view:
@@ -82,18 +81,18 @@ while True:
         
         if event.type == pygame.MOUSEBUTTONDOWN:
             try:
-                clicked_star = [s for s in stars if s.rect.collidepoint(event.pos)][0]
+                clicked_star: StarView = [s for s in stars if s.rect.collidepoint(event.pos)][0]
                 planet_view_group = []
-                for planet in clicked_star.planets:
-                    planet_view_group.append(planet)
+                for planet in clicked_star.star.planets:
+                    planet_view_group.append(PlanetView(planet))
                 show_planet_view = True
             except IndexError:
-                if event.pos[0] > 200 and event.pos[0] < 900:
+                if event.pos[0] > 200 and event.pos[0] < 1400:
                     if current_view == None:
                         show_planet_view = False
     
 
-    for planet in planets:
+    for planet in planet_view_group:
         planet.observer_update()
 
     screen.fill("black")

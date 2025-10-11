@@ -1,12 +1,16 @@
 from src.race import Race
+from src.planet import planet_types
+
 def create_races() -> list[Race]:
     races: list[Race] = []
     races.append(Race(
         "Human",
+        planet_types[0],
         influence=1.25
     ))
     races.append(Race(
         "snarho", 
+        prefered_planet="Inferno",
         industry=1.25, 
         research=.75, 
         influence=1.5,

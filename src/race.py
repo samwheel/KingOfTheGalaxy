@@ -20,6 +20,7 @@ class Race:
     def __init__(
         self,
         name: str,
+        prefered_planet: str,
         industry: float = 1.00,
         research: float = 1.00,
         influence: float = 1.0,
@@ -41,6 +42,7 @@ class Race:
         dislikes: list = []
     ) -> None:
         self.__name: str = name
+        self.__prefered_planet: str = prefered_planet
         self.__industry: float = industry
         self.__research: float = research
         self.__influence: float = influence
@@ -66,7 +68,7 @@ class Race:
 
     def __repr__(self) -> str:
         return (
-            f"Race('{self.name}', {self.industry}, {self.research}, "
+            f"Race('{self.name}', '{self.prefered_planet}', {self.industry}, {self.research}, "
             f"{self.influence}, {self.stockpile_distribution}, {self.population}, "
             f"{self.supply}, {self.fuel}, {self.troops}, {self.shields}, "
             f"{self.defense}, {self.stability}, {self.tolerance}, {self.stealth}, "
@@ -77,6 +79,10 @@ class Race:
     @property
     def name(self) -> str:
         return self.__name
+
+    @property
+    def prefered_planet(self) -> str:
+        return self.__prefered_planet
 
     @property
     def industry(self) -> float:

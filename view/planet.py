@@ -12,21 +12,22 @@ from src.resource_helper import resourcePath
 from pygame_helper import basic_sprite, button
 
 class PlanetView(sprite.Sprite, Observer):
-    def __init__(self, radius: int, color: Color, planet: Planet, padding: int = 10) -> None:
+    def __init__(self, planet: Planet) -> None:
         super().__init__()
         self.image = None
         self.__sprites = sprite.Group()
+        padding = 10
+        radius = 50
 
         # Add planet logo
-        planet_surface = Surface((radius * 2, radius * 2), pygame.SRCALPHA)
-        draw.circle(planet_surface, color, (radius, radius), radius)
-        planet_sprite = basic_sprite.BasicSprite(planet_surface, 0, 0)
+        planet_surface = pygame.image.load("images/" + planet.type + ".png") 
+        planet_sprite = basic_sprite.BasicSprite(planet_surface, 5, 5)
         self.__sprites.add(planet_sprite)
 
         # Add planet name
         font = pygame.font.Font(None, 36)
-        text_surface = font.render(planet.name, True, Color("white"))
-        text_sprite = basic_sprite.BasicSprite(text_surface, radius * 2 + padding * 2, radius - text_surface.get_height() // 2)
+        text_surface: Surface = font.render(planet.name, True, Color("white"))
+        text_sprite = basic_sprite.BasicSprite(text_surface, radius * 2 + padding, radius - text_surface.get_height())
         self.__sprites.add(text_sprite)
 
         # Add focus button

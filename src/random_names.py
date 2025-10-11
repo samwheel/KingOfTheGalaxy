@@ -24,18 +24,19 @@ class RandomNameGenerator:
     def random_name(self) -> str:
         name: str = ""
         snippets:list[str] = []
-        for value, probability in self.__patterns.items():
+        for value, probability in sorted(self.__patterns.items(), key=lambda item: item[1], reverse=True):
             if probability > 0:
                 snippets.append(value)
-        snippets.extend(["in"])
+        if len(snippets) == 0:
+            snippets.extend(["in"])
         snippets = [choice(snippets) for _ in range(5, 10)]
         index = 0
 
         for _ in range(choice(range(4, 15))):
-            vowel_chance = 0
+            vowel_chance = 1
             for i in range(len(name) - 1, -1, -1):
                 vowel_chance += 1 if name[i] in self.__consonants else 0
-                if vowel_chance == 0:
+                if vowel_chance == 1:
                     break
             
             similarities = 0
