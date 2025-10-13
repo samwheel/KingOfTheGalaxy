@@ -1,5 +1,4 @@
 from pygame import Surface
-from pygame import draw
 from pygame import sprite
 from pygame import Color
 import pygame
@@ -8,6 +7,7 @@ import math
 from src.planet import Planet, Focus
 from src.observer import Observer
 from src.resource_helper import resourcePath
+from src.empire import Empire
 
 from pygame_helper import basic_sprite, button
 
@@ -18,6 +18,7 @@ class PlanetView(sprite.Sprite, Observer):
         self.__sprites = sprite.Group()
         padding = 10
         radius = 50
+        self.planet: Planet = planet
 
         # Add planet logo
         planet_surface = pygame.image.load("images/" + planet.type + ".png") 
@@ -26,28 +27,29 @@ class PlanetView(sprite.Sprite, Observer):
 
         # Add planet name
         font = pygame.font.Font(None, 36)
-        text_surface: Surface = font.render(planet.name, True, Color("white"))
+        text_surface: Surface = font.render(planet.name, True, planet.empire.color if isinstance(planet.empire, Empire) else "white")
         text_sprite = basic_sprite.BasicSprite(text_surface, radius * 2 + padding, radius - text_surface.get_height())
         self.__sprites.add(text_sprite)
 
-        # Add focus button
-        focus_button = button.Button(Color("black"), planet.focus, radius * 2 + padding, radius + padding, action=lambda: self.change_focus(), update_function=lambda: setattr(focus_button, "text", planet.focus))
-        self.__sprites.add(focus_button)
-        self.planet = planet
+        if planet.race != None:
+            # Add focus button
+            focus_button = button.Button(Color("black"), planet.focus, radius * 2 + padding, radius + padding, action=lambda: self.change_focus(), update_function=lambda: setattr(focus_button, "text", planet.focus))
+            self.__sprites.add(focus_button)
+            self.planet = planet
 
-        # Planet population
-        population_text = button.Button(Color("black"), f"Pop {planet.population}", padding, radius * 2 + padding * 2, update_function=lambda: setattr(population_text, "text", f"Pop {math.floor(planet.population * 10 + 0.5) / 10}"))
-        self.__sprites.add(population_text)
+            # Planet population
+            population_text = button.Button(Color("black"), f"Pop {math.floor(planet.population * 10 + 0.5) / 10}", padding, radius * 2 + padding * 2, update_function=lambda: setattr(population_text, "text", f"Pop {math.floor(planet.population * 10 + 0.5) / 10}"))
+            self.__sprites.add(population_text)
 
-        # Planet Production
-        production_button = button.ImageButton(
-            Color("gray"), 
-            button.create_button_surface(pygame.image.load("images/production_icon.png"), str(math.floor(planet.industry * 10 + 0.5) / 10)), 
-            padding + 120, 
-            radius * 2 + padding * 2, 
-            update_function=lambda: setattr(production_button, "surface", button.create_button_surface(pygame.image.load(resourcePath("images/production_icon.png")), str(math.floor(planet.industry * 10 + 0.5) / 10))))
-        self.__sprites.add(production_button)
-        
+            # Planet Production
+            production_button = button.ImageButton(
+                Color("gray"), 
+                button.create_button_surface(pygame.image.load("images/production_icon.png"), str(math.floor(planet.industry * 10 + 0.5) / 10)), 
+                padding + 120, 
+                radius * 2 + padding * 2, 
+                update_function=lambda: setattr(production_button, "surface", button.create_button_surface(pygame.image.load(resourcePath("images/production_icon.png")), str(math.floor(planet.industry * 10 + 0.5) / 10))))
+            self.__sprites.add(production_button)
+            
         self.building_sprites: list[sprite.Sprite] = []
 
     def change_focus(self, focus: Focus | None = None) -> None:

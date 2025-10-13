@@ -48,6 +48,6 @@ coll = COLLECT(
 app = BUNDLE(
     coll,
     name='KingOfTheGalaxy.app',
-    icon=None,
+    icon='images/KingOfTheGalaxy.icns',
     bundle_identifier=None,
 )
