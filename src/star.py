@@ -10,6 +10,6 @@ class Star:
         self.planets: list[Planet] = planets
         for index, planet in enumerate(self.planets):
             planet.name = self.name + " " + "I" * (index + 1)
-        self.ships: list[Buildable] = []
+            planet.star = self
         self.color: str = choice(["red", "green", "blue"])
         self.radius: int = randint(10, 15)

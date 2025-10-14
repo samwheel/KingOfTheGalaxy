@@ -13,6 +13,7 @@ from pygame_helper import button
 from view.star import StarView
 from view.planet import PlanetView
 from view.production import ProductionView
+from view.ship import ShipView
 
 from src.planet import Planet, planet_types
 from src.race import *
@@ -106,7 +107,10 @@ while True:
 
     for star in stars:
         StarView(star).draw(screen)
-
+    
+    for ship in player_empire.ships:
+        ShipView(ship, player_empire).draw(screen)
+        
     if show_planet_view:
         pygame.draw.rect(screen, (50, 50, 50), pygame.rect.Rect(1400, 50, 350, 900))
         for index, planet in enumerate(planet_view_group):
@@ -128,8 +132,7 @@ while True:
     for widget in widgets:
         widget.move(0, 0)
         widget.draw(screen)
-    
-    
+
 
     pygame.display.flip()
     clock.tick(60)

@@ -1,5 +1,3 @@
-from random import randint
-
 from pygame.sprite import Sprite
 from pygame import Surface
 import pygame

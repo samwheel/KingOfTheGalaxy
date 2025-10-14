@@ -1,17 +1,21 @@
-from src.buildings import Building
+from src.buildings import Buildable, Building
 from src.observer import Observer
+from src.ship import Ship
 
 class BuildHandler(Observer):
     def __init__(self, empire) -> None:
         self.empire = empire
-        self.__build_list: list[tuple[Building, float]] = []
+        self.__build_list: list[tuple[Buildable, float]] = []
 
-    def build(self, building: Building):
+    def build(self, building: Buildable):
         try:
             try:
                 self.__build_list.index((building, 0))
             except ValueError:
-                building.planet.buildings.index(building)
+                if isinstance(building, Building):
+                    building.location.buildings.index(building)
+                elif isinstance(building, Ship):
+                    self.empire.ships.index(building)
         except ValueError:
             self.__build_list.append((building, 0))
             pass
@@ -19,7 +23,7 @@ class BuildHandler(Observer):
             pass
     
     @property
-    def build_list(self) -> list[tuple[Building, float]]:
+    def build_list(self) -> list[tuple[Buildable, float]]:
         return self.__build_list
     
     def observer_update(self) -> None:
@@ -38,5 +42,8 @@ class BuildHandler(Observer):
             if new_build_industry + build_industry < building.build_production:
                 self.__build_list[build_index] = (building, new_build_industry + build_industry)
             else:
-                building.planet.buildings.append(building)
+                if isinstance(building, Ship):
+                    self.empire.ships.append(building.clone())
+                elif isinstance(building, Building):
+                    building.location.buildings.append(building)
                 self.__build_list.remove((building, build_industry))

@@ -1,18 +1,27 @@
 from functools import reduce
 
 from src.buildings import Buildable
+from src.star import Star
 
 class ShipPart:
-    def __init__(self, speed_bonus: int, armor_bonus: int, shield_bonus: int, damage_bonus: int, fuel_bonus: int) -> None:
-        self.speed_bonus = speed_bonus
-        self.armor_bonus = armor_bonus
-        self.shield_bonus = shield_bonus
-        self.damage_bonus = damage_bonus
-        self.fuel_bonus = fuel_bonus
+    def __init__(self, speed_bonus: int, armor_bonus: int, shield_bonus: int, damage_bonus: int, fuel_bonus: int, cost: int, build_max_amount: int) -> None:
+        self.speed_bonus: int = speed_bonus
+        self.armor_bonus: int = armor_bonus
+        self.shield_bonus: int = shield_bonus
+        self.damage_bonus: int = damage_bonus
+        self.fuel_bonus: int = fuel_bonus
+        self.cost: int = cost
+        self.build_max_amount: int = build_max_amount
 
 class Ship(Buildable):
-    def __init__(self, parts: list[ShipPart]) -> None:
+    def __init__(self, name: str, parts: list[ShipPart], location: Star | tuple[int, int] | None = None) -> None:
+        super().__init__(location, name, reduce(lambda x, y: x + y, [part.cost for part in parts]), reduce(lambda x, y: max(x, y), [part.build_max_amount for part in parts]))
         self.parts: list[ShipPart] = parts
+        self.current_fuel: int = self.fuel
+        self.location: Star | tuple[int, int] | None = location
+    
+    def clone(self) -> 'Ship':
+        return Ship(self.name, self.parts.copy(), self.location)
     
     @property
     def speed(self) -> int:
@@ -36,16 +45,16 @@ class Ship(Buildable):
     
 class Laser(ShipPart):
     def __init__(self) -> None:
-        super().__init__(0, 0, 0, 50, 0)
+        super().__init__(0, 0, 0, 50, 0, 50, 50)
 
 class TitaniumArmor(ShipPart):
     def __init__(self) -> None:
-        super().__init__(0, 500, 0, 0, 0)
+        super().__init__(0, 500, 0, 0, 0, 100, 100)
 
 class RetroRockets(ShipPart):
     def __init__(self) -> None:
-        super().__init__(20, 0, 0, 0, 0)
+        super().__init__(20, 0, 0, 0, 0, 75, 75)
 
 class HydrogenFuel(ShipPart):
     def __init__(self) -> None:
-        super().__init__(0, 0, 0, 0, 5)
+        super().__init__(0, 0, 0, 0, 5, 25, 25)

@@ -23,7 +23,7 @@ planet_types: tuple[str, str, str, str, str, str, str, str, str] = (
 )
 
 class Planet(Observer):
-    def __init__(self, name:str, planet_type: str, race:Race|None = None, population: float = 0, focus:Focus = Focus.INDUSTRY) -> None:
+    def __init__(self, name:str, planet_type: str, race:Race|None = None, population: float = 0, focus:Focus = Focus.INDUSTRY, star: object|None = None) -> None:
         self.name: str = name
         self.race: Race|None = race
         self.focus: Focus = focus
@@ -36,6 +36,7 @@ class Planet(Observer):
         else:
             self.max_population: int = 0
         self.buildings: list[Building] = []
+        self.star: object | None = star
     
     def __str__(self) -> str:
         return f"Planet {self.name} focused on {self.focus}"

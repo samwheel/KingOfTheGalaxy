@@ -1,3 +1,4 @@
+from src.ship import *
 from src.year_handler import YearHandler
 from src.planet import Planet
 from src.build_handler import BuildHandler
@@ -11,6 +12,8 @@ class Empire:
         self.build_handler: BuildHandler = BuildHandler(self)
         self.year_handler.add_observer(self.build_handler)
         self.color: str = color
+        self.ships: list[Ship] = []
+        self.ship_models: list[Ship] = [Ship("Scout MK.1", [RetroRockets(), HydrogenFuel()])]
     
     def __str__(self) -> str:
         return f"Empire {self.name}, Emperor {self.emperor_name}"
