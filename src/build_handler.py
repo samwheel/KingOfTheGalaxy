@@ -14,6 +14,8 @@ class BuildHandler(Observer):
             except ValueError:
                 if isinstance(building, Building):
                     building.location.buildings.index(building)
+                elif isinstance(building, Ship):
+                    self.__build_list.append((building, 0))
         except ValueError:
             self.__build_list.append((building, 0))
             pass

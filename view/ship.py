@@ -18,4 +18,4 @@ class ShipView(pygame.sprite.Sprite):
         self.empire: Empire = empire
         
     def draw(self, surface: pygame.Surface) -> None:
-        surface.blit(pygame.font.Font(None, 24).render("^", True, pygame.Color(self.empire.color)), (self.position[0] + 10, self.position[1] - 40))
+        surface.blit(pygame.font.Font(None, 45).render("^", True, pygame.Color(self.empire.color)), (self.position[0] + 15, self.position[1] - 50))
