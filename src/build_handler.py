@@ -43,7 +43,8 @@ class BuildHandler(Observer):
                 self.__build_list[build_index] = (building, new_build_industry + build_industry)
             else:
                 if isinstance(building, Ship):
-                    self.empire.ships.append(building.clone())
+                    ship: Ship = building.clone()
+                    self.empire.add_ship(ship)
                 elif isinstance(building, Building):
                     building.location.buildings.append(building)
                 self.__build_list.remove((building, build_industry))

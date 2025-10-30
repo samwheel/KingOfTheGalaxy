@@ -30,3 +30,7 @@ class Empire:
         self.planets.append(planet)
         self.year_handler.add_observer(planet)
         planet.empire = self
+    
+    def add_ship(self, ship: Ship) -> None:
+        self.ships.append(ship)
+        self.year_handler.add_observer(ship)

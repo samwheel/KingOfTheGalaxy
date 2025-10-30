@@ -20,7 +20,6 @@ from src.empire import Empire
 from src.create_races import create_races
 from src.resource_helper import resourcePath
 from src.star import Star
-from src.ship import Ship
 
 def random_star_name() -> str:
     name_list:list[str] = []
@@ -48,7 +47,7 @@ for _ in range(3):
         current_position = (current_position[0] + randint(150, 350), current_position[1])
         stars.append(Star(random_star_name(), (current_position[0] + randint(-50, 50), current_position[1] + randint(-50, 150)), [Planet("", choice(planet_types)) for _ in range(randint(0, 3))]))
 
-homeplanet_index: int = randint(0, len(stars))
+homeplanet_index: int = randint(0, len(stars) - 1)
 stars[homeplanet_index] = Star(random_star_name(), stars[homeplanet_index].position, [player_empire.planets[0]])
 
 view_controller = ViewController()
@@ -101,6 +100,8 @@ while True:
                 for planet in clicked_star.planets:
                     view_controller.planet_view_group.append(planet)
                 view_controller.show_planet_view = True
+                if isinstance(view_controller.current_view, ShipCommandView):
+                    view_controller.current_view.ship.destination = clicked_star
             except IndexError as e:
                 if event.pos[0] > 200 and event.pos[0] < 1400:
                     if view_controller.current_view == None:

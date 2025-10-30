@@ -4,13 +4,14 @@ from view.planet import PlanetView
 from view.ship import ShipView
 from view.star import StarView
 from view.screens import Screen
+from view.view_control_interface import ViewControlInterface
 
 from src.planet import Planet
 from src.star import Star
 
-class ViewController:
+class ViewController(ViewControlInterface):
     def __init__(self) -> None:
-        self.current_view: Screen | None = None
+        super().__init__()
         self.show_planet_view: bool = False
         self.planet_view_group: list[Planet] = []
     

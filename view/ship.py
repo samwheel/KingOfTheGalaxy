@@ -5,6 +5,7 @@ from src.empire import Empire
 from src.observer import Observer
 
 from view.ship_command import ShipCommandView
+from view.view_control_interface import ViewControlInterface
 
 class ShipView(pygame.sprite.Sprite, Observer):
     def __init__(self, ship: Ship, empire: Empire) -> None:
@@ -24,24 +25,21 @@ class ShipView(pygame.sprite.Sprite, Observer):
         else:
             self.position = (0, 0)
     
-    def observer_update(self, view_controller = None) -> None:
-        if self.ship.location != self.ship.destination and self.ship.destination is not None:
-            self.ship.location = self.ship.destination
-            self.update_position()
-
+    def observer_update(self, view_controller: ViewControlInterface|None = None) -> None:
         if self.ship.location == self.ship.destination:
             self.ship.destination = None
+
+        if self.ship.location != self.position:
+            self.update_position()
         
         if self.ship.location is None:
             self.position = (0, 0)
-        
-        surface = pygame.Surface((30, 30), pygame.SRCALPHA)
-        self.draw(surface)
-        
-        if surface.get_rect().collidepoint(pygame.mouse.get_pos()):
+
+        if abs(pygame.mouse.get_pos()[0] - self.position[0] - 12) < 20 and abs(pygame.mouse.get_pos()[1] - self.position[1] + 45) < 20:
             if pygame.mouse.get_pressed()[0]:
-                ship_command_view = ShipCommandView(self.ship)
-                view_controller.current_view = ship_command_view
+                if view_controller:
+                    ship_command_view = ShipCommandView(self.ship)
+                    view_controller.current_view = ship_command_view
             
 
     def draw(self, surface: pygame.Surface) -> None:

@@ -13,3 +13,6 @@ class Star:
             planet.star = self
         self.color: str = choice(["red", "green", "blue"])
         self.radius: int = randint(10, 15)
+    
+    def __str__(self) -> str:
+        return self.name
