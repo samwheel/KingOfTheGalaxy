@@ -5,27 +5,24 @@ import math
 from src.empire import Empire
 from src.planet import Planet
 from src.buildings import get_buildings_list, Building
-from src.observer import Observer
 from src.ship import Ship
 from src.star import Star
 
+from view.screens import Screen
+
 from pygame_helper.button import Button
 
-class ProductionView(pygame.sprite.Sprite, Observer):
+class ProductionView(Screen):
     def __init__(self, empire: Empire):
         super().__init__()
         self.empire: Empire = empire
-        self.image = pygame.Surface((500, 800))
+        self.image = pygame.Surface((500, 850))
         self.image.fill(pygame.Color("lightgray"))
         self.rect: pygame.Rect = self.image.get_rect(topleft=(0, 100))
         self.font = pygame.font.Font(None, 36)
-        self.current_planet: Planet | None = None
         self.building_list_buttons: list[Button] = []
         self.ship_buttons: list[Button] = []
 
-    def set_current_planet(self, planet: Planet|None) -> None:
-        self.current_planet = planet
-    
     def update(self, event) -> None:
         for button in self.building_list_buttons:
             button.update(event)
@@ -52,8 +49,8 @@ class ProductionView(pygame.sprite.Sprite, Observer):
             self.empire.build_handler.build(building_type(self.current_planet))
 
 
-        pygame.draw.rect(surface, pygame.Color("white"), pygame.Rect(self.rect.bottomright[0] + 10, self.rect.bottomright[1] - 100, 500, 100))
-        self.building_list_buttons: list[Button] = [Button(pygame.Color("black"), str(building(self.current_planet)), self.rect.bottomright[0] + 30, self.rect.bottomright[1] - 80 + 50 * get_buildings_list().index(building), lambda: add_to_list(building)) for building in get_buildings_list()]
+        pygame.draw.rect(surface, pygame.Color("white"), pygame.Rect(self.rect.bottomright[0] + 10, self.rect.bottomright[1] - 150, 500, 150))
+        self.building_list_buttons: list[Button] = [Button(pygame.Color("black"), str(building(self.current_planet)), self.rect.bottomright[0] + 30, self.rect.bottomright[1] - 130 + 35 * get_buildings_list().index(building), lambda: add_to_list(building)) for building in get_buildings_list()]
         for building_button in self.building_list_buttons:
             building_button.draw(surface)
         
@@ -66,6 +63,6 @@ class ProductionView(pygame.sprite.Sprite, Observer):
                 self.empire.build_handler.build(new_ship)
 
         for ship in self.empire.ship_models:
-            ship_button = Button(pygame.Color("black"), str(ship), self.rect.bottomright[0] + 30, self.rect.bottomright[1] - 80 + 50 * (len(self.building_list_buttons) + self.empire.ship_models.index(ship)), lambda: create_new_ship(ship))
+            ship_button = Button(pygame.Color("black"), str(ship), self.rect.bottomright[0] + 30, self.rect.bottomright[1] - 130 + 35 * (len(self.building_list_buttons) + self.empire.ship_models.index(ship)), lambda: create_new_ship(ship))
             ship_button.draw(surface)
             self.ship_buttons.append(ship_button)

@@ -26,12 +26,11 @@ class Race:
         influence: float = 1.0,
         stockpile_distribution: float = 0.02,
         population: float = 1.0,
-        supply: int = 1,
         fuel: float = 0.0,
         troops: float = 1.0,
         shields: int = 0,
         defense: int = 0,
-        stability: float = 0.0,
+        stability: int = 0,
         tolerance: int = 0,
         stealth: int = 0,
         detection_range: int = 0,
@@ -48,12 +47,11 @@ class Race:
         self.__influence: float = influence
         self.__stockpile_distribution: float = stockpile_distribution
         self.__population: float = population
-        self.__supply: int = supply
         self.__fuel: float = fuel
         self.__troops: float = troops
         self.__shields: int = shields
         self.__defense: int = defense
-        self.__stability: float = stability
+        self.__stability: int = stability
         self.__tolerance: int = tolerance
         self.__stealth: float = stealth
         self.__detection_range: int = detection_range
@@ -70,7 +68,7 @@ class Race:
         return (
             f"Race('{self.name}', '{self.prefered_planet}', {self.industry}, {self.research}, "
             f"{self.influence}, {self.stockpile_distribution}, {self.population}, "
-            f"{self.supply}, {self.fuel}, {self.troops}, {self.shields}, "
+            f"{self.fuel}, {self.troops}, {self.shields}, "
             f"{self.defense}, {self.stability}, {self.tolerance}, {self.stealth}, "
             f"{self.detection_range}, {repr(self.metabolism)}, {self.xeno}, "
             f"{self.pilots}, {self.likes}, {self.dislikes})"
@@ -105,10 +103,6 @@ class Race:
         return self.__population
 
     @property
-    def supply(self) -> int:
-        return self.__supply
-
-    @property
     def fuel(self) -> float:
         return self.__fuel
 
@@ -125,7 +119,7 @@ class Race:
         return self.__defense
 
     @property
-    def stability(self) -> float:
+    def stability(self) -> int:
         return self.__stability
 
     @property

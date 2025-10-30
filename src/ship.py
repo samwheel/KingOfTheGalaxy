@@ -19,6 +19,7 @@ class Ship(Buildable):
         self.parts: list[ShipPart] = parts
         self.current_fuel: int = self.fuel
         self.location: Star | tuple[int, int] | None = location
+        self.destination: Star | tuple[int, int] | None = None
     
     def clone(self) -> 'Ship':
         return Ship(self.name, self.parts.copy(), self.location)

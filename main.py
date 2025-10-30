@@ -1,10 +1,8 @@
 from random import choice, randint
 import os
 
-from src.race import Race
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
-import warnings
-warnings.filterwarnings("ignore", category=UserWarning)
+
 import pygame
 from pygame.time import Clock
 
@@ -13,7 +11,8 @@ from pygame_helper import button
 from view.star import StarView
 from view.planet import PlanetView
 from view.production import ProductionView
-from view.ship import ShipView
+from view.ship_command import ShipCommandView
+from view.view_control import ViewController
 
 from src.planet import Planet, planet_types
 from src.race import *
@@ -21,6 +20,7 @@ from src.empire import Empire
 from src.create_races import create_races
 from src.resource_helper import resourcePath
 from src.star import Star
+from src.ship import Ship
 
 def random_star_name() -> str:
     name_list:list[str] = []
@@ -51,15 +51,18 @@ for _ in range(3):
 homeplanet_index: int = randint(0, len(stars))
 stars[homeplanet_index] = Star(random_star_name(), stars[homeplanet_index].position, [player_empire.planets[0]])
 
-planet_view_group: list[Planet] = [player_empire.planets[0]]
-widgets = pygame.sprite.Group()
-current_view: pygame.sprite.Sprite | None = None
+view_controller = ViewController()
+view_controller.planet_view_group = [player_empire.planets[0]]
+view_controller.current_view = None
+
 def toggle_production_view() -> None:
-    global current_view
-    if current_view == production_view:
-        current_view = None
+    global view_controller
+    if view_controller.current_view == production_view:
+        view_controller.current_view = None
     else:
-        current_view = production_view
+        view_controller.current_view = production_view
+
+widgets = pygame.sprite.Group()
 
 production_button = button.ImageButton(pygame.Color("black"), pygame.image.load(resourcePath("images/production_icon.png")), 150, 50, action=toggle_production_view)
 turn_button = button.Button(
@@ -79,13 +82,13 @@ clock = Clock()
 while True:
     for event in pygame.event.get():
         widgets.update(event)
-        for index, planet in enumerate(planet_view_group):
+        for index, planet in enumerate(view_controller.planet_view_group):
             planet_view = PlanetView(planet)
             planet_view.move(1400, index)
             planet_view.update(event)
         
-        if current_view and show_planet_view:
-            current_view.update(event)
+        if view_controller.current_view and show_planet_view:
+            view_controller.current_view.update(event)
 
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -94,45 +97,18 @@ while True:
         if event.type == pygame.MOUSEBUTTONDOWN:
             try:
                 clicked_star: Star = [s for s in stars if StarView(s).rect.collidepoint(event.pos)][0]
-                planet_view_group = []
+                view_controller.planet_view_group = []
                 for planet in clicked_star.planets:
-                    planet_view_group.append(planet)
-                show_planet_view = True
-            except IndexError:
+                    view_controller.planet_view_group.append(planet)
+                view_controller.show_planet_view = True
+            except IndexError as e:
                 if event.pos[0] > 200 and event.pos[0] < 1400:
-                    if current_view == None:
-                        show_planet_view = False
+                    if view_controller.current_view == None:
+                        view_controller.show_planet_view = False
 
     screen.fill("black")
 
-    for star in stars:
-        StarView(star).draw(screen)
-    
-    for ship in player_empire.ships:
-        ShipView(ship, player_empire).draw(screen)
-        
-    if show_planet_view:
-        pygame.draw.rect(screen, (50, 50, 50), pygame.rect.Rect(1400, 50, 350, 900))
-        for index, planet in enumerate(planet_view_group):
-            planet_view = PlanetView(planet)
-            planet_view.move(1400, index)
-            planet_view.draw(screen)
-            planet_view.observer_update()
-    
-    if current_view:
-        current_view.draw(screen)
-        current_view.set_current_planet(None)
-        try:
-            current_view.set_current_planet(planet_view_group[0])
-        except IndexError:
-            pass
-
-        current_view.observer_update()
-    
-    for widget in widgets:
-        widget.move(0, 0)
-        widget.draw(screen)
-
+    view_controller.update_views(stars, player_empire, screen, widgets)
 
     pygame.display.flip()
     clock.tick(60)
