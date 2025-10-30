@@ -106,6 +106,8 @@ while True:
                 if event.pos[0] > 200 and event.pos[0] < 1400:
                     if view_controller.current_view == None:
                         view_controller.show_planet_view = False
+                    elif isinstance(view_controller.current_view, ShipCommandView):
+                        view_controller.current_view = None
 
     screen.fill("black")
 
