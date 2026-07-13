@@ -1,0 +1,42 @@
+.starmap {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    background-color: black;
+    overflow: hidden;
+    cursor: grab;
+    user-select: none;
+    touch-action: none;
+
+    &.dragging {
+        cursor: grabbing;
+    }
+
+    .star {
+        position: absolute;
+        color: white;
+        transform: translate(-50%, -50%);
+        z-index: 1;
+
+        .star-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            transform: scale(1.2);
+        }
+
+        .star-background {
+            width: 1em;
+            height: 1em;
+            border-radius: 50%;
+            background-color: yellow;
+        }
+
+        .star-name {
+            margin-top: 0;
+            white-space: nowrap;
+        }
+    }
+}
