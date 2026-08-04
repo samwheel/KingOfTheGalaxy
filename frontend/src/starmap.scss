@@ -1,16 +1,19 @@
 .starmap {
-    position: relative;
-    width: 100vw;
+    /* Make the starmap a full-viewport layer so page layout changes
+       (like showing/hiding the StarView) don't change its size. */
+    position: fixed;
+    inset: 0;
+    width: 100%;
     height: 100vh;
-    background-color: black;
+    background-color: rgb(10, 6, 20);
+    /* Very subtle dot noise to mask display banding on some GPUs/browsers */
+    background-image: radial-gradient(circle, rgba(255,255,255,0.012) 0px, rgba(255,255,255,0) 1px);
+    background-size: 3px 3px;
+    background-blend-mode: overlay;
     overflow: hidden;
-    cursor: grab;
     user-select: none;
     touch-action: none;
-
-    &.dragging {
-        cursor: grabbing;
-    }
+    z-index: -1;
 
     .star {
         position: absolute;

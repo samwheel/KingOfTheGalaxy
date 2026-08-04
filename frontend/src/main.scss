@@ -1,3 +1,22 @@
+@import url('https://fonts.googleapis.com/css2?family=Oxanium:wght@200..800&display=swap');
+
+* {
+    box-sizing: border-box;
+}
+
+html, body, #root {
+    height: 100%;
+    background-color: rgb(10, 6, 20);
+}
+
 body {
     margin: 0;
+    color: white;
+    font-family: "Oxanium", sans-serif;
+}
+
+/* Ensure the React app root stacks above the background starmap */
+#root {
+    position: relative;
+    z-index: 1;
 }
