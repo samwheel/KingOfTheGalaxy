@@ -15,5 +15,6 @@ class Star:
             "name": self.name,
             "coordinates": self.coordinates,
             "planets": [planet.name for planet in self.planets],
+            "planet_details": [planet.to_dict() for planet in self.planets],
             "star_lane_connections": [star.name for star in self.star_lane_connections]
         }

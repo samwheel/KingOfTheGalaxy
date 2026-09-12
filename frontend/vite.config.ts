@@ -18,6 +18,18 @@ export default defineConfig({
         target: 'http://127.0.0.1:5000',
         changeOrigin: true,
       },
+      '/turn': {
+        target: 'http://127.0.0.1:5000',
+        changeOrigin: true,
+      },
+      '/ships': {
+        target: 'http://127.0.0.1:5000',
+        changeOrigin: true,
+      },
+      '/shipyard': {
+        target: 'http://127.0.0.1:5000',
+        changeOrigin: true,
+      },
     },
   },
 })

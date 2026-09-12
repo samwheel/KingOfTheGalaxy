@@ -1,15 +1,28 @@
 import { useEffect, useState } from "react";
-import type { Star } from "./Star";
+import type { Star, Planet, Empire } from "./types";
 import "./StarView.scss";
-import type { Planet } from "./planet";
-import type { Empire } from "./empire"
 
-export default function StarView(props: {star: Star; empires: Empire[]}) {
+const planetImages = import.meta.glob("./assets/planets/*.{png,jpg,jpeg,webp,avif}", {
+    eager: true,
+    import: "default",
+}) as Record<string, string>;
+
+function getPlanetImageUrl(environment: string): string | undefined {
+    const normalizedEnvironment = environment.trim().toLowerCase();
+    const matchingKey = Object.keys(planetImages).find((key) => {
+        const fileName = key.split("/").pop()?.replace(/\.[^.]+$/, "") ?? "";
+        return fileName.toLowerCase() === normalizedEnvironment;
+    });
+
+    return matchingKey ? planetImages[matchingKey] : undefined;
+}
+
+export default function StarView(props: {star: Star; empires: Empire[]; refreshToken: number; showPlanets: boolean}) {
     const { star } = props;
     const [planets, setPlanets] = useState<Planet[]>([]);
 
     useEffect(() => {
-        if (!star) {
+        if (!star || !props.showPlanets) {
             setPlanets([]);
             return;
         }
@@ -40,7 +53,7 @@ export default function StarView(props: {star: Star; empires: Empire[]}) {
         return () => {
             isCancelled = true;
         };
-    }, [star?.name]);
+    }, [star?.name, props.refreshToken, props.showPlanets]);
 
     const planets_to_colors: Record<string, string> = {}
     for(let empire of props.empires) {
@@ -56,30 +69,37 @@ export default function StarView(props: {star: Star; empires: Empire[]}) {
     return (
         <div className="star-view">
             <h2 style={{ color: starColor }}>{star.name}</h2>
-            <ul>
-                {planets.map((planet, index) => {
-                    const planetColor = planets_to_colors[planet.name] ?? "white";
+            {props.showPlanets ? (
+                <div className="planets">
+                    {planets.map((planet, index) => {
+                        const planetColor = planets_to_colors[planet.name] ?? "white";
+                        const planetImageUrl = getPlanetImageUrl(planet.environment);
 
-                    return (
-                        <div className="planet" key={index} style={{ color: planetColor }}>
-                            <h3>{planet.name}</h3>
-                            <ul>
-                                <li>Environment: {planet.environment}</li>
-                                <li>Population: {planet.population}</li>
-                                <li>
-                                    <h4>Statistics:</h4>
-                                    <ul>
-                                        <li>Population: {planet.statistics.population}</li>
-                                        <li>GDP: {planet.statistics.GDP}</li>
-                                        <li>Research: {planet.statistics.research}</li>
-                                        <li>Defense: {planet.statistics.defense}</li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </div>
-                    );
-                })}
-            </ul>
+                        return (
+                            <div className="planet" key={index}>
+                                <h3 className="planet-name" style={{ color: planetColor }}>{planet.name}</h3>
+                                <div className="planet-content">
+                                    <div
+                                        className="environment"
+                                        style={{ backgroundImage: planetImageUrl ? `url("${planetImageUrl}")` : undefined }}
+                                    />
+                                    {planet.statistics.population !== 0.0 && (
+                                        <ul>
+                                            <li>Population: {planet.statistics.population.toPrecision(2)}</li>
+                                            <li>Revenue: {planet.statistics.revenue.toPrecision(2)}</li>
+                                            <li>Research: {planet.statistics.research.toPrecision(2)}</li>
+                                            <li>Defense: {planet.statistics.defense.toPrecision(2)}</li>
+                                            <li>Detection Range: {planet.statistics.detection_range.toPrecision(2)}</li>
+                                        </ul>
+                                    )}
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>
+            ) : (
+                <div className="unknown-planets" aria-label="Planets are outside detection range">?</div>
+            )}
         </div>
     )
 }
