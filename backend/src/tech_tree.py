@@ -13,7 +13,7 @@ def make_tech_tree() -> list[Technology]:
 
     fusion_generation = Technology(
         name="Fusion Power Generation",
-        description="Harness the power of nuclear fusion to generate energy. Increases GDP production.",
+        description="Harness the power of nuclear fusion to generate energy. Increases GDP production. Requires Type I Civilization.",
         effect=lambda empire: empire.increase_GDP_production(3),
         prerequisites=[starting_tech]
     )
