@@ -1,11 +1,11 @@
 import math
 
-from backend.src.game import Game
-from backend.src.tech_tree import make_tech_tree
-from backend.src.star import Star
-from backend.src.planet import Planet, planet_environments
-from backend.src.name_generator import generate_name_list, generate_prefix_list
-from backend.src.roman import int_to_roman
+from src.game import Game
+from src.tech_tree import make_tech_tree
+from src.star import Star
+from src.planet import Planet, planet_environments
+from src.name_generator import generate_name_list, generate_prefix_list
+from src.roman import int_to_roman
 
 from random import Random
 from rich import print

@@ -1,4 +1,4 @@
-from backend.src.technology import Technology
+from src.technology import Technology
 
 def make_tech_tree() -> list[Technology]:
     tech_tree: list[Technology] = []

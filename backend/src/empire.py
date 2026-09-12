@@ -1,4 +1,4 @@
-from backend.src.planet import Planet
+from src.planet import Planet
 from random import Random
 
 class Empire:

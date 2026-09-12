@@ -4,9 +4,9 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 from rich import print
 
-from backend.src.standard_game_factory import StandardGameFactory
-from backend.src.empire import Empire
-from backend.src.ship import SHIP_MODELS, Ship, StarLocation
+from src.standard_game_factory import StandardGameFactory
+from src.empire import Empire
+from src.ship import SHIP_MODELS, Ship, StarLocation
 
 game_factory = StandardGameFactory()
 current_game = game_factory.create_game()
