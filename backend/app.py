@@ -28,9 +28,13 @@ def create_app() -> Flask:
 
     @app.errorhandler(404)
     def handle_not_found(error):
-        if request.path.startswith(("/ships", "/starmap", "/empires", "/tech_tree", "/turn", "/shipyard")):
+        if request.path.startswith(("/ships", "/starmap", "/empires", "/tech_tree", "/turn")):
             return jsonify({"error": "API route not found"}), 404
         return error
+
+    @app.route("/")
+    def index():
+        return jsonify({"message": "Welcome to the King of the Galaxy API!"})
 
     @app.route("/starmap")
     def get_starmap():
