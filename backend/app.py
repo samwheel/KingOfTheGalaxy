@@ -1,3 +1,5 @@
+#!/Users/samwise/Projects/Python/KingOfTheGalaxy/.venv/bin/python
+
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from rich import print

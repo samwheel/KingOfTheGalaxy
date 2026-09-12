@@ -27,6 +27,7 @@ export type Empire = {
         "detection_range": number;
     };
     "money": number;
+    "ships": Ship[];
 };
 
 export type Star = {

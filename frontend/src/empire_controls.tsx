@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import type { Empire, ShipDesign, Star } from "./types"
 import "./empire_controls.scss"
+import { API_BASE_URL } from "./constants"
 
 export default function EmpireControls(props: { empire: Empire, refreshToken: number, setRefreshToken: (token: number | ((token: number) => number)) => void, turn: number, stars: Star[], onPurchase: (model: ShipDesign, planet: string) => Promise<void> }) {
     const [isShipyardOpen, setIsShipyardOpen] = useState(false)
@@ -11,7 +12,7 @@ export default function EmpireControls(props: { empire: Empire, refreshToken: nu
     const [isPurchasing, setIsPurchasing] = useState(false)
 
     function handleTurnButtonClick() {
-        fetch("/turn_update", { method: "POST" })
+        fetch(`${API_BASE_URL}/turn_update`, { method: "POST" })
             .then((response) => {
                 if (!response.ok) throw new Error(`Request failed: ${response.status}`);
                 return response.json();
@@ -26,7 +27,7 @@ export default function EmpireControls(props: { empire: Empire, refreshToken: nu
 
     useEffect(() => {
         if (!isShipyardOpen || designs.length > 0) return
-        fetch("/shipyard")
+        fetch(`${API_BASE_URL}/shipyard`)
             .then((response) => {
                 if (!response.ok) throw new Error(`Request failed: ${response.status}`)
                 return response.json() as Promise<ShipDesign[]>

@@ -4,6 +4,7 @@ import Starmap from "./starmap"
 import StarView from "./StarView"
 import EmpireControls from "./empire_controls";
 import ShipView from "./ShipView";
+import { API_BASE_URL } from "./constants";
 
 function App() {
     const [selectedStar, setSelectedStar] = useState<Star | null>(null);
@@ -25,15 +26,15 @@ function App() {
         // Fetch empires and starmap together so we can find which star
         // contains the first planet returned by the API.
         Promise.all([
-            fetch("/empires").then((response) => {
+            fetch(`${API_BASE_URL}/empires`).then((response) => {
                 if (!response.ok) throw new Error(`Request failed: ${response.status}`);
                 return response.json();
             }),
-            fetch("/starmap").then((response) => {
+            fetch(`${API_BASE_URL}/starmap`).then((response) => {
                 if (!response.ok) throw new Error(`Request failed: ${response.status}`);
                 return response.json();
             }),
-            fetch("/ships").then((response) => {
+            fetch(`${API_BASE_URL}/ships`).then((response) => {
                 if (!response.ok) throw new Error(`Request failed: ${response.status}`);
                 return response.json();
             }),
@@ -78,7 +79,7 @@ function App() {
     useEffect(() => {
         let isCancelled = false;
 
-        fetch("/turn")
+        fetch(`${API_BASE_URL}/turn`)
             .then((response) => {
                 if (!response.ok) throw new Error(`Request failed: ${response.status}`);
                 return response.json();
@@ -98,7 +99,7 @@ function App() {
     }, [refreshToken]);
 
     const moveShip = async (ship: Ship, destination: string) => {
-        const response = await fetch(`/ships/${encodeURIComponent(ship.model_name)}/move`, {
+        const response = await fetch(`${API_BASE_URL}/ships/${encodeURIComponent(ship.model_name)}/move`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ destination }),
@@ -117,7 +118,7 @@ function App() {
     };
 
     const purchaseShip = async (model: ShipDesign, planet: string) => {
-        const response = await fetch(`/empires/${encodeURIComponent(empires[0].name)}/ships`, {
+        const response = await fetch(`${API_BASE_URL}/empires/${encodeURIComponent(empires[0].name)}/ships`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ model_name: model.model_name, planet }),

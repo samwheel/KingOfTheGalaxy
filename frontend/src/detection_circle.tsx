@@ -2,6 +2,7 @@ import colorStringToHex from "./string_to_hex"
 
 export default function DetectionCircle(props: { radius: number, color: string }) {
     const diameter = props.radius * 2
+    const color = colorStringToHex(props.color)
 
     return (
         <svg
@@ -21,8 +22,8 @@ export default function DetectionCircle(props: { radius: number, color: string }
                 cx={props.radius}
                 cy={props.radius}
                 r={Math.max(0, props.radius - 1)}
-                fill={colorStringToHex(props.color) + "04"}
-                stroke={colorStringToHex(props.color) + "40"}
+                fill={color + "04"}
+                stroke={color + "40"}
                 strokeWidth="2"
             />
         </svg>

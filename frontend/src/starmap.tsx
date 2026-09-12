@@ -3,6 +3,7 @@ import type { Ship, Star } from "./types"
 import "./starmap.scss"
 import type { Empire } from "./types";
 import DetectionCircle from "./detection_circle";
+import { API_BASE_URL } from "./constants";
 
 export default function Starmap(props: { setSelectedStar: (star: Star | null, showPlanets?: boolean) => void; empires: Empire[]; ships: Ship[]; selectedShipName?: string; selectedStar?: Star | null; refreshToken: number; onSelectShip: (ship: Ship) => void; onMoveShip: (ship: Ship, destination: string) => Promise<void> }) {
     const [starmap, setStarmap] = useState<Star[]>([])
@@ -22,7 +23,7 @@ export default function Starmap(props: { setSelectedStar: (star: Star | null, sh
     }, [viewOffset])
 
     useEffect(() => {
-        fetch("/starmap")
+        fetch(`${API_BASE_URL}/starmap`)
             .then((response) => {
                 if (!response.ok) {
                     throw new Error(`Request failed: ${response.status}`)
@@ -316,7 +317,7 @@ export default function Starmap(props: { setSelectedStar: (star: Star | null, sh
                         >
                             <DetectionCircle
                                 radius={ship.detection_range * zoomLevel * coordinateScale}
-                                color="cyan"
+                                color={props.empires.find((empire) => empire?.ships?.includes(ship))?.color ?? "white"}
                             />
                         </div>
                         <div

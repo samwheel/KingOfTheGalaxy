@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import type { Star, Planet, Empire } from "./types";
+import { API_BASE_URL } from "./constants";
 import "./StarView.scss";
 
 const planetImages = import.meta.glob("./assets/planets/*.{png,jpg,jpeg,webp,avif}", {
@@ -29,7 +30,7 @@ export default function StarView(props: {star: Star; empires: Empire[]; refreshT
 
         let isCancelled = false;
 
-        fetch(`/starmap/${encodeURIComponent(star.name)}`)
+        fetch(`${API_BASE_URL}/starmap/${encodeURIComponent(star.name)}`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`Request failed: ${response.status}`);
