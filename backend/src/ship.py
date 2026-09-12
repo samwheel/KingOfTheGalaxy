@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import TypeAlias
 
-from src.star import Star
+from backend.src.star import Star
 
 SHIP_MODELS = {
     "Scout": {

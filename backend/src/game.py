@@ -1,7 +1,7 @@
-from src.empire import Empire
-from src.star import Star
-from src.ship import Ship
-from src.technology import Technology
+from backend.src.empire import Empire
+from backend.src.star import Star
+from backend.src.ship import Ship
+from backend.src.technology import Technology
 from collections import deque
 
 class Game:

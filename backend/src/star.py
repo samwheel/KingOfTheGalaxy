@@ -1,4 +1,4 @@
-from src.planet import Planet
+from backend.src.planet import Planet
 
 class Star:
     def __init__(self, name: str, coordinates: tuple, planets: list[Planet] | None = None, star_lane_connections: list[Star] | None = None):
